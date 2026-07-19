@@ -1,0 +1,4 @@
+interface:
+  display_name: "深圳大学学术报告写作"
+  short_description: "保留模板原文并按深大规范生成实验报告"
+  default_prompt: "Use $write-szu-academic-report to complete the supplied Shenzhen University report template without changing its titles or requirements, convert red text to black, and place code in framed 9 pt code boxes."
