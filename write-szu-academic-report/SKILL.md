@@ -1,6 +1,6 @@
 ---
 name: write-szu-academic-report
-description: Create, complete, restructure, and audit Shenzhen University academic and experiment reports in DOCX, with content-derived five-level Chinese headings, protected template text, framed code, and rendered layout verification.
+description: Create, restructure, format, and audit Shenzhen University (SZU / 深圳大学 / 深大) academic reports and lab reports (学术报告、实验报告) in DOCX. Use for Chinese report writing, template completion, five-level headings, thin-line tables, and WPS / Microsoft Word layout verification while preserving template text and experimental evidence.
 ---
 
 # 深圳大学学术与实验报告

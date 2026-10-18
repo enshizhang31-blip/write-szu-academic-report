@@ -22,6 +22,29 @@
 
 ## 安装与调用
 
+通过 Skills CLI 安装（支持 Codex、Claude Code 等代理）：
+
+```powershell
+npx skills add enshizhang31-blip/write-szu-academic-report --skill write-szu-academic-report
+```
+
+只查看仓库中的技能而不安装：
+
+```powershell
+npx skills add enshizhang31-blip/write-szu-academic-report --list
+```
+
+`find-skills` 使用 Skills CLI 搜索。可用以下精确关键词查询目录：
+
+```powershell
+npx skills find write-szu-academic-report
+npx skills find szu
+```
+
+[Skills目录页面](https://skills.sh/enshizhang31-blip/write-szu-academic-report/write-szu-academic-report)由平台维护。根据[官方收录说明](https://skills.sh/docs/faq)，技能通过真实CLI安装产生的匿名遥测被收录；仓库公开不代表搜索索引已即时更新。若暂时搜不到，可使用上面的仓库地址直接安装。
+
+适用搜索主题：深圳大学／深大学术报告、实验报告、Shenzhen University / SZU academic report、lab report、DOCX、WPS、Microsoft Word。
+
 将仓库中的 `write-szu-academic-report` 子目录复制到 Codex 技能目录。更新已有安装前先备份。
 
 ```powershell
