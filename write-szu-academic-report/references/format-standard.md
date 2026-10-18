@@ -1,134 +1,38 @@
-# High-Strictness Format Standard
+# 格式、语义与区域保护规范
 
-## Priority
+## 优先级
+用户明确要求 > 原模板受保护文字及封面 > 本技能五级标题和新增内容规则 > 非冲突的视觉参考。参考样例中标题不具备规范权威，样例里的代码和结论不自动视为真实。
 
-1. User instructions.
-2. Supplied template wording, order, and original formatting.
-3. Academic semantic structure.
-4. Non-conflicting bundled samples.
-5. Word defaults only when no rule exists.
+## 五级标题
+一级：一、二、三、；SimHei／黑体14磅，加粗，顶格。
+二级：(一)(二)(三)；SimSun／宋体12磅，不加粗，顶格。
+三级：1.、2.、3.；SimSun／宋体12磅，不加粗，左缩进两字。
+四级：(1)(2)(3)；SimSun／宋体12磅，不加粗，左缩进两字。
+五级：①②③；SimSun／宋体12磅，不加粗，左缩进两字。
 
-## Typography Tokens
+半角括号；三级不用十进制连缀。两字采用`leftChars=200`并给出24磅兼容值，`firstLine=0`、`firstLineChars=0`，无悬挂缩进。换行保持同样的段落左边界。编号后不附加制表符。字号、字体同样应用到自动编号。
 
-| Role | Chinese font | Latin font | Size | Color | Alignment | First-line indent |
-|---|---|---|---:|---|---|---|
-| Document title | SimSun | Times New Roman | 15 pt / 小三 | automatic black | centered | none |
-| Heading 1 | SimSun | Times New Roman | 14 pt / 四号 | automatic black | left | none |
-| Heading 2 | SimSun | Times New Roman | 12 pt / 小四 | automatic black | left | none |
-| Heading 3 | SimSun | Times New Roman | 10.5 pt / 五号 | automatic black | left | none |
-| Heading 4 | SimSun | Times New Roman | 9 pt / 小五 | automatic black | left | none |
-| Body | SimSun | Times New Roman | 10.5 pt / 五号 | automatic black | justified or left | 21 pt |
-| Figure caption | SimSun | Times New Roman | 10.5 pt / 五号 | automatic black | centered | none |
-| Ordinary table text | SimSun | Times New Roman | 10.5 pt / 五号 | black | deliberate | none |
-| Code box | SimSun | Times New Roman | 9 pt / 小五 | automatic black | left | none |
+专用样式`SZUHeading1`至`SZUHeading5`对应Word大纲0至4，防止修改模板自带Heading样式影响原文。五级编号绑定同一列表实例，每个下级在所属上级变化时重启。不要手写序号与自动序号叠加。
 
-## Supplied Template Protection
+正文逻辑决定标题：先检查父子包含关系、同级划分标准、标题与段落的对应关系，再确定层级。脚本可以发现跳级、错误缩进或序号定义，不能自动证明语义正确。固定模板若含真实上位标题，应作为提纲的外部父级记录，不能因其样式旧而改写原文。
 
-- Treat a supplied template as authoritative content, not merely a visual reference.
-- Preserve existing template titles, experiment content, tasks, requirements, screenshot-count instructions, and submission instructions verbatim and in their original order.
-- Preserve protected template formatting exactly: font family, size, bold, italic, underline, color, spacing, indentation, alignment, borders, fills, table geometry, page breaks, and relative placement.
-- Treat the first page as the strictest protected region. Do not change any existing first-page text, run formatting, paragraph formatting, table formatting, frame formatting, or layout.
-- Do not rename, rewrite, summarize, delete, reorder, recolor, resize, restyle, shade, or normalize protected template text or tables.
-- Insert completed content beneath or around the preserved instructions.
-- Preserve original template colors. Change red template text to black only if the user explicitly asks for template color normalization.
-- When the user asks for complete preservation including size and color, protected template text keeps the original supplied-template run formatting exactly; apply typography normalization only to newly added report content.
-- Run `scripts/prepare_template_black.py` only when the user explicitly requests template color normalization. Always run `scripts/audit_template_preservation.py` before delivery.
+## 新增内容
+正文10.5磅，中文宋体、拉丁文字Times New Roman、黑色、首行21磅。正文默认1.25倍行距，段后6磅；可在不改变字号和缩进的前提下微调密度。
+代码9磅，中文宋体、拉丁文字Times New Roman、黑色，保持空格与缩进，使用`CodeBox`。单个代码框前后一个普通空行或等效间距；说明紧随其后。
+图与题注居中，题注10.5磅，图／表标签与数字之间无空格。图片不得明显失真，代码与图中文字必须可读。
+普通数据表白色表头、白与F2F2F2交替正文行，内外统一0.5磅黑色单实线（sz=4），清除冲突表格样式与单元格覆盖，不用加粗线宽遮盖断线；短字段居中、长文字左对齐。模板外框和代码框不是普通数据表。表题默认在表下，紧贴表格。
 
-## Protected Template Region And Generated Content Region
+## 保护与允许变化
+`prepare`给工作副本中的原段落分配稳定标识，并生成区域清单。旧段落与旧格式默认受保护，新增内容只能进入明确授权的填写区域；正文布局表格先用reflow转换为正常段落的有界区域。空模板中的字段需单独授权；填写时保留原有run，在新run中加入已知值。若标签和值在同一run，不得整体替换标签。
+可调整布局表格允许新增行、行高及跨页、单元格边框等变化，保留原段落次序、归属、表格宽度与网格。受保护文字、原样式、节尺寸、页眉页脚和媒体继续检查。审计保护的是文字与结构契约，不宣称固定每个原段落的物理页码。
+原段落可调整的分页属性限keepNext、keepLines、widowControl、pageBreakBefore；其余格式保持。特别的改色或其他变更必须由用户明确要求并更新授权基线。
 
-- Protected Template Region: all content that existed in the supplied template before editing, including the first page, headings, requirements, blank placeholders, tables, frames, headers, footers, and grading sections.
-- Generated Content Region: only paragraphs, tables, figures, captions, code boxes, and explanations newly inserted by Codex.
-- Apply black text, SimSun/Times New Roman normalization, body size, ordinary-table styling, code-box styling, and spacing rules only to Generated Content Region.
-- Do not apply `normalize_docx.py`, global font normalization, ordinary-table styling, red-to-black conversion, or heading restyling to Protected Template Region.
+## 分页与视觉门槛
+正文、标题和题注使用正常段落，禁止每段一行的无边框全文表格。只展开明确授权且无合并、无复杂定位的单列布局表，真实数据表、图片、代码、原文顺序与编号保留；教师栏单独保留为表单。转换清单保留原记录及前后位置，不能通过删除保护记录绕过审计。长正文自然跨页。标题与后续内容同页，表格重复表头，图题对齐。超过一页的代码应精选或拆成语义片段，不强制塞入一页。
+可授权添加页边框以构成每页闭合外框，但必须目视确认没有双线、错位及封面不合适的边框。页外框独立于正文布局，封面不加框；不能保留全文布局表来模拟外框。多节文档逐节确定边框范围。
+逐页检查闭合外框、网格连续、无截断重叠、图片可读、图题同页、无孤立标题、无非必要大块留白。自动风险提示需要人工判定，可记录合理的留白例外，不能伪造审查完成。
 
-## Frame-Required Reports
+## 软件与检查记录
+WPS优先、Word兼容；首次任务询问软件，已回答沿用。doctor区分注册信息与实际导出能力。仅操作安全独立实例及工作副本，不改全局网格显示设置或关闭已有文档。render默认200 DPI，分别记录版本、实际编号及PDF/页图哈希；verify绑定当前源文件和渲染哈希。自动图像诊断只提示疑似问题，不代替逐页审查；缺少任一必需软件检查不得宣称双软件通过。编辑网格线不打印，须结构检查确认正文未被布局表包裹。
 
-- Before writing into a supplied report template, inspect page 2 and later for large bordered fill-in frames, table cells, or text boxes. If those regions contain labels such as `实验过程及内容：`, `数据分析：`, `实验结论：`, `指导教师批阅意见`, `成绩评定`, or `备注`, classify the template as frame-required.
-- If the user explicitly says the report must be completed in a frame/text box, or must not be supplemented outside the frame, classify it as frame-required even if automated inspection is uncertain.
-- In frame-required mode, insert generated report content only inside the existing matching frame cells or text boxes. Do not append body-report pages, prose, figures, code boxes, analysis, or conclusions outside the template frame.
-- Use `实验过程及内容：` for experiment steps, screenshots, figure captions, key code boxes, and code explanations. Use `数据分析：` for data comparison and interpretation. Use `实验结论：` for the final summary.
-- Keep `指导教师批阅意见`, `成绩评定`, signatures, dates, and remarks blank unless the user explicitly provides those values.
-- Allow the template frame to expand or continue across pages to fit content. Preserve the frame labels, borders, order, and protected template formatting.
-- If no fill-in frame is present, use the normal supplied-template insertion workflow and place generated content at the designated location or immediately after the relevant preserved requirement.
-- Frame-required mode changes only the layout container. All generated content still follows the normal font, size, color, first-line indent, code-box, figure, caption, audit, and render-review rules.
-
-## Body Paragraphs
-
-- Apply a 21 pt first-line indent to ordinary Chinese prose.
-- Do not simulate indentation with spaces or tabs.
-- Do not indent headings, captions, lists, code boxes, references, centered paragraphs, or table cells.
-- Use strict academic numbering in newly generated content: `（一）` for the first generated level under a preserved template heading, `1.` for the second level, `（1）` for the third level, and `①` only when a fourth level is unavoidable.
-- Do not mix academic numbering with `1）`, `1)`, dot bullets, hyphen bullets, or decorative symbols in generated prose.
-- Do not use dot bullets, hyphen bullets, or decorative bullet symbols for body distinctions.
-
-## Academic Headings
-
-- Choose levels by meaning, not appearance.
-- Do not skip levels.
-- Preserve supplied template headings verbatim, even when their wording differs from preferred headings.
-- Use no more than four numbered heading levels for newly added content.
-- In Chinese experiment reports, prefer `（一）`, `1.`, `（1）`, `①` as the generated heading ladder unless the supplied template already mandates another ladder.
-
-## Code Boxes
-
-- Put every displayed code excerpt inside one dedicated framed code box created with `scripts/code_box.py`.
-- Use a single-cell container whose paragraphs use the `CodeBox` style; it is a visual text box, not an ordinary data table.
-- Use the `CodeBox` paragraph style for every paragraph inside the box.
-- Set all code-box text to exactly 9 pt / 小五, with SimSun for Chinese and Times New Roman for Latin text.
-- Use automatic black text, a thin black border, compact internal margins, and a white or very light gray fill.
-- Do not apply first-line indentation inside code boxes.
-- Do not split a short code box across pages. Keep it near its heading and explanation.
-- Keep displayed code concise. Include only the decisive lines needed to explain orchestration, validation, algorithms, model training, or CLI usage.
-- Add exactly one normal blank line of visual spacing before and after every code box when possible. If a generated table precedes or follows a code box, keep that same single-line separation so the blocks do not touch or drift apart.
-- Put a detailed explanation immediately after every displayed code box, separated only by that single visual spacing gap. The explanation must name the key identifiers, state the inputs and outputs, explain the control/data flow, connect the excerpt to the intended design pattern or requirement, and mention important edge-case handling.
-
-## Template/Layout Frames
-
-- Treat supplied template outer frames, cover frames, and report fill-in frames as layout containers, not ordinary data tables.
-- Mark generated or edited template frames with `SZU_TEMPLATE_FRAME` when possible.
-- Preserve template frame wording, row order, borders, width, and placement.
-- Do not apply ordinary table styling to template frames: no white header rule, no alternating white/light-gray rows, and no data-table alignment changes.
-- Keep template frame cells unshaded unless the original supplied template explicitly used shading that the user wants preserved.
-- Continue to enforce black text, SimSun Chinese text, Times New Roman Latin text, and required sizes for newly added content inside template frames; protected template text keeps its original formatting when the user requests exact preservation.
-- In frame-required reports, template frames are the mandatory placement region for generated report content, not decorative containers. Keep newly added ordinary prose inside those frames first-line indented, while headings, captions, images, code boxes, lists, references, and centered content remain unindented.
-
-## Ordinary Tables
-
-- Use `assets/table-format-reference.docx` as the mandatory ordinary-table reference.
-- Use A4 portrait geometry and sample-derived margins.
-- Use a white header row and alternating white/light-gray body rows.
-- Use single-line outer and internal grid borders.
-- Keep short values centered, narrative cells left-aligned, and cells vertically centered.
-- Never use fixed row heights that clip content.
-- Exclude `SZU_TEMPLATE_FRAME` and `CodeBox` containers from ordinary-table styling.
-- Apply ordinary-table styling only to newly generated tables. Never restyle supplied-template tables just to satisfy ordinary-table rules.
-- Add spacing before and after every generated table, especially near code boxes.
-
-## Figures And Captions
-
-- Center images and captions.
-- Place captions immediately below images.
-- Use 10.5 pt automatic black caption text.
-- Keep each figure-caption pair together.
-- Use compact generated captions with no internal blank between label and number: `表1...`, `表3-1...`, `图1...`. Do not use `表 1`, `图 1`, or insert blank lines between a table/figure and its caption.
-- Put table captions immediately below generated tables unless the supplied template or discipline explicitly requires table captions above tables.
-
-## Delivery-Blocking Failures
-
-- Supplied template titles, experiment content, requirements, screenshot counts, or submission instructions were modified, removed, reordered, or replaced.
-- Any existing first-page template text or formatting was modified.
-- Protected template content was font-normalized, recolored, resized, re-bolded, re-indented, shaded, or restyled without explicit user instruction.
-- Red text remains in generated content, or protected red template text was changed without explicit user instruction.
-- Displayed code is outside a framed code box.
-- Code-box text is not exactly 9 pt / 小五.
-- Ordinary body text is not 10.5 pt.
-- Chinese text is not SimSun or Latin text is not Times New Roman.
-- Non-default colored text appears.
-- Template/layout frames were styled as ordinary data tables or given row background fills.
-- Ordinary body paragraphs lack the required first-line indent.
-- Heading levels are skipped or semantically inconsistent.
-- Generated academic numbering mixes incompatible forms or uses nonstandard forms such as `1）`.
-- Ordinary tables do not follow the reference format.
-- Figures or captions are not centered.
-- Generated captions contain internal blanks such as `表 1` or `图 1`, or a blank line separates a generated table/figure from its caption.
-- Report identifiers conflict with supplied source code.
+本机WPS/Word实测兼容要点：数据表仅保留表级单实线定义，清除冗余单元格边框；删除表级和行级 `tblCellSpacing` 元素（显式零值也可能触发WPS分离边框模式）。固定布局的表宽与网格列宽总和一致。普通短数据行保持完整，长表在行间分页并重复表头；很长单行须允许跨页或重新拆分内容。

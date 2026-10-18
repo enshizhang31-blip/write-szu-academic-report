@@ -1,4 +1,4 @@
 interface:
   display_name: "深圳大学学术报告写作"
-  short_description: "保留模板原文并按深大规范生成实验报告"
-  default_prompt: "Use $write-szu-academic-report to complete the supplied Shenzhen University report template without changing its titles or requirements, convert red text to black, and place code in framed 9 pt code boxes."
+  short_description: "按正文逻辑构建五级标题，保护模板并核验报告排版"
+  default_prompt: "Use $write-szu-academic-report. Default to WPS as the primary editor and Microsoft Word for compatibility; ask the main software only if not already answered. Preserve the five-level Chinese heading rules and experimental facts. Use normal body paragraphs, explicitly reflow authorized layout tables, and apply 0.5 pt black single borders with white headers and alternating white/light-gray data rows. Probe actual editor versions and isolated rendering capability. Require structure checks plus evidence-bound per-page review in both editors; never claim dual-editor acceptance when either actual check is missing."
